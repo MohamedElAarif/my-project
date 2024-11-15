@@ -3,9 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>QR Code Attendance</title>
 </head>
 <body>
-    <h1>Hello world</h1>
+    <h1>QR Code Attendance System</h1>
+    <p>Scan the QR Code to record attendance.</p>
+
+    <script>
+        // افترض أن معرف الطالب تم قراءته من QR Code ويمكنك وضعه يدويًا للاختبار
+        const studentId = "12345";  // قم بتغيير هذا إلى المعرف الذي تم قراءته من QR Code
+
+        // جمع معلومات الجهاز
+        const deviceInfo = {
+            model: navigator.userAgent,  // يحصل على بيانات الجهاز والمتصفح
+            os: navigator.platform       // يحصل على بيانات نظام التشغيل
+        };
+
+        // إرسال بيانات الحضور إلى خادم Flask
+        fetch("http://<your_server_ip>:5000/scan", {  // استبدل <your_server_ip> بعنوان IP الخاص بالخادم
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ student_id: studentId, device_info: deviceInfo })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            alert("Attendance recorded successfully!");
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to record attendance.");
+        });
+    </script>
 </body>
 </html>
